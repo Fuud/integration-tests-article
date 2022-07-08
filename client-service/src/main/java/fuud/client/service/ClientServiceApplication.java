@@ -9,7 +9,7 @@ import org.springframework.boot.context.properties.ConfigurationPropertiesScan;
 public class ClientServiceApplication {
 
     public static void main(String[] args) {
-        SpringApplication.run(ClientServiceApplication.class, args);
+        SpringApplication.run(ClientServiceApplication.class, "--spring.config.name=application-client");
     }
 
 }
