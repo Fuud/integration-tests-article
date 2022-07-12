@@ -2,6 +2,7 @@ package fuud.client.service;
 
 import fuud.client.service.worker.WorkerResponseDto;
 import org.springframework.boot.web.client.RestTemplateBuilder;
+import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.client.RestTemplate;
 
@@ -16,8 +17,14 @@ public class ClientServiceEndpoint {
     }
 
     @PostMapping("/task")
-    public String placeTask(@RequestBody ClientRequest request){
+    public String placeTask(@RequestBody ClientRequest request) {
         return restTemplate.postForObject(config.getWorkerUrl(), request, WorkerResponseDto.class).getJobId();
+    }
+
+    @ExceptionHandler
+    @ResponseStatus(HttpStatus.INTERNAL_SERVER_ERROR)
+    public void handleException(Throwable t) {
+        t.printStackTrace();
     }
 
 }
