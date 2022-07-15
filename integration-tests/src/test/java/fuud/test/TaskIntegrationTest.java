@@ -17,6 +17,9 @@ import static org.junit.Assert.assertFalse;
 public class TaskIntegrationTest {
     @Test
     public void testTaskSubmission() throws Exception {
+        System.out.println("Correct classpath for client app: " + ClassPathHelper.getClasspathForArtifact("client-service"));
+        System.out.println("Correct classpath for worker app: " + ClassPathHelper.getClasspathForArtifact("worker-service"));
+
         ClientServiceApplication.main(new String[0]);
         WorkerServiceApplication.main(new String[0]);
 
