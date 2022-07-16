@@ -1,4 +1,4 @@
-package fuud.test;
+package fuud.test.infra;
 
 import java.io.File;
 import java.io.IOException;

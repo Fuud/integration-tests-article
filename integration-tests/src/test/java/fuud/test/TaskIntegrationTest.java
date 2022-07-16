@@ -1,11 +1,12 @@
 package fuud.test;
 
 import fuud.client.service.ClientServiceApplication;
+import fuud.test.infra.ClassPathHelper;
+import fuud.test.infra.Node;
 import fuud.worker.service.WorkerServiceApplication;
 import org.gridkit.nanocloud.Cloud;
 import org.gridkit.nanocloud.CloudFactory;
 import org.gridkit.nanocloud.VX;
-import org.gridkit.vicluster.ViNode;
 import org.gridkit.vicluster.ViProps;
 import org.junit.Test;
 import org.springframework.http.HttpHeaders;
@@ -24,29 +25,19 @@ public class TaskIntegrationTest {
     public void testTaskSubmission() throws Exception {
 
         Cloud cloud = CloudFactory.createCloud();
-        ViNode clientNode = cloud.node("client");
+        Node clientNode = new Node(cloud, "client");
         clientNode.x(VX.CLASSPATH).inheritClasspath(false);
         ViProps.at(clientNode).setLocalType();
         ClassPathHelper.getClasspathForArtifact("client-service")
                 .forEach(classPathElement -> clientNode.x(VX.CLASSPATH).add(classPathElement));
-        clientNode.exec(new Runnable() {
-            @Override
-            public void run() {
-                ClientServiceApplication.main(new String[0]);
-            }
-        });
+        clientNode.exec(() -> ClientServiceApplication.main(new String[0]));
 
-        ViNode workerNode = cloud.node("worker");
+        Node workerNode = new Node(cloud, "worker");
         workerNode.x(VX.CLASSPATH).inheritClasspath(false);
         ViProps.at(workerNode).setLocalType();
         ClassPathHelper.getClasspathForArtifact("worker-service")
                 .forEach(classPathElement -> workerNode.x(VX.CLASSPATH).add(classPathElement));
-        workerNode.exec(new Runnable() {
-            @Override
-            public void run() {
-                WorkerServiceApplication.main(new String[0]);
-            }
-        });
+        workerNode.exec(() -> WorkerServiceApplication.main(new String[0]));
 
 
         HttpResponse<String> response = HttpClient.newBuilder().build().send(

@@ -6,4 +6,6 @@
    only!) [rev:7c8abae7](https://github.com/Fuud/integration-tests-article/commit/7c8abae738f827b7601bc42704c3c1e657ae09fb)
 4) Added maven-dependency-plugin:build-classpath and code to read resulting
    files [rev:50d2802f](https://github.com/Fuud/integration-tests-article/commit/50d2802f9f4cbf710beb65fbd87850139b3131d6)
-5) Use nanocloud library: create separated jvm for each component
+5) Use nanocloud library: create separated jvm for each
+   component[rev:f9118159](https://github.com/Fuud/integration-tests-article/commit/f9118159e514d15b9897104ec7b47e69b9e0c63d)
+6) Add wrappers for ViNode, replace anonimous classes with lambdas.
