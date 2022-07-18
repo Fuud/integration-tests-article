@@ -7,9 +7,11 @@
 4) Added maven-dependency-plugin:build-classpath and code to read resulting
    files [rev:50d2802f](https://github.com/Fuud/integration-tests-article/commit/50d2802f9f4cbf710beb65fbd87850139b3131d6)
 5) Use nanocloud library: create separated jvm for each
-   component[rev:f9118159](https://github.com/Fuud/integration-tests-article/commit/f9118159e514d15b9897104ec7b47e69b9e0c63d)
+   component [rev:f9118159](https://github.com/Fuud/integration-tests-article/commit/f9118159e514d15b9897104ec7b47e69b9e0c63d)
 6) Add wrappers for ViNode, replace anonimous classes with
-   lambdas.[rev:f7e1724b](https://github.com/Fuud/integration-tests-article/commit/f7e1724b9e8c35d976c8912c07444f1228af16b5)
+   lambdas. [rev:f7e1724b](https://github.com/Fuud/integration-tests-article/commit/f7e1724b9e8c35d976c8912c07444f1228af16b5)
 7) Allocate free ports for each component. Try to preserve ports between
-   runs.[rev:90080a1c](https://github.com/Fuud/integration-tests-article/commit/90080a1c51519a0bbf2126dda1b01fc69730db99)
-8) Print config and http links
+   runs. [rev:90080a1c](https://github.com/Fuud/integration-tests-article/commit/90080a1c51519a0bbf2126dda1b01fc69730db99)
+8) Print config and http
+   links [rev:a020e1f9](https://github.com/Fuud/integration-tests-article/commit/a020e1f92ea9e6fdce97671a598b3ecd32ffa93b)
+9) Shutdown jvms after test

@@ -7,12 +7,29 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.ObjectWriter;
 import fuud.test.infra.components.Component;
 import org.gridkit.nanocloud.Cloud;
+import org.gridkit.nanocloud.CloudFactory;
 
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Map;
 
 public class EnvStarter {
+    @FunctionalInterface
+    public interface TestBlock {
+        void performTest(Cloud cloud) throws Exception;
+    }
+
+    public static void integrationTest(TestBlock block) {
+        Cloud cloud = CloudFactory.createCloud();
+        try {
+            block.performTest(cloud);
+        } catch (Exception e) {
+            throw new RuntimeException(e);
+        } finally {
+            cloud.shutdown();
+        }
+    }
+
     public static void env(Cloud cloud, Component<?>... components) {
         printConfigsToConsole(components);
 
