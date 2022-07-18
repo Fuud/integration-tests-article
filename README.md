@@ -10,4 +10,6 @@
    component[rev:f9118159](https://github.com/Fuud/integration-tests-article/commit/f9118159e514d15b9897104ec7b47e69b9e0c63d)
 6) Add wrappers for ViNode, replace anonimous classes with
    lambdas.[rev:f7e1724b](https://github.com/Fuud/integration-tests-article/commit/f7e1724b9e8c35d976c8912c07444f1228af16b5)
-7) Allocate free ports for each component. Try to preserve ports between runs.
+7) Allocate free ports for each component. Try to preserve ports between
+   runs.[rev:90080a1c](https://github.com/Fuud/integration-tests-article/commit/90080a1c51519a0bbf2126dda1b01fc69730db99)
+8) Print config and http links

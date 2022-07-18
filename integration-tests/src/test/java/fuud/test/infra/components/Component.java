@@ -4,11 +4,21 @@ import org.gridkit.nanocloud.Cloud;
 
 import java.util.List;
 
-public interface Component {
-    void start(Cloud cloud, List<Component> env);
+public abstract class Component<TConfig> {
+    protected final TConfig config;
 
-    static <T> T findComponent(List<Component> env, Class<T> componentClass) {
-        List<Component> found = env.stream().filter(componentClass::isInstance).toList();
+    public Component(TConfig config) {
+        this.config = config;
+    }
+
+    abstract public void start(Cloud cloud, List<Component<?>> env);
+
+    public TConfig getConfig() {
+        return config;
+    }
+
+    static <T> T findComponent(List<Component<?>> env, Class<T> componentClass) {
+        List<Component<?>> found = env.stream().filter(componentClass::isInstance).toList();
         if (found.isEmpty()) {
             throw new IllegalStateException("Cannot find component " + componentClass);
         }

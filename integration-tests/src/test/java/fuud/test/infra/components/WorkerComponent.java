@@ -10,15 +10,19 @@ import org.gridkit.vicluster.ViProps;
 
 import java.util.List;
 
-public class WorkerComponent implements Component {
+public class WorkerComponent extends Component<WorkerComponent.Config> {
+    @SuppressWarnings("unused")
     public static class Config {
         final int restPort = PortAllocator.freePort();
+        private final String link = "http://localhost:" + restPort;
     }
 
-    public Config config = new Config();
+    public WorkerComponent() {
+        super(new Config());
+    }
 
     @Override
-    public void start(Cloud cloud, List<Component> env) {
+    public void start(Cloud cloud, List<Component<?>> env) {
         Node workerNode = new Node(cloud, "worker");
         workerNode.x(VX.CLASSPATH).inheritClasspath(false);
         ViProps.at(workerNode).setLocalType();

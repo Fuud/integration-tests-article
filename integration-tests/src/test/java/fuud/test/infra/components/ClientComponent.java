@@ -10,17 +10,19 @@ import org.gridkit.vicluster.ViProps;
 
 import java.util.List;
 
-import static fuud.test.infra.components.Component.findComponent;
-
-public class ClientComponent implements Component {
+public class ClientComponent extends Component<ClientComponent.Config> {
+    @SuppressWarnings("unused")
     public static class Config {
         public final int restPort = PortAllocator.freePort();
+        private final String link = "http://localhost:" + restPort;
     }
 
-    public Config config = new Config();
+    public ClientComponent() {
+        super(new Config());
+    }
 
     @Override
-    public void start(Cloud cloud, List<Component> env) {
+    public void start(Cloud cloud, List<Component<?>> env) {
         Node clientNode = new Node(cloud, "client");
         clientNode.x(VX.CLASSPATH).inheritClasspath(false);
         ViProps.at(clientNode).setLocalType();

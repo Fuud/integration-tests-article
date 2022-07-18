@@ -29,7 +29,7 @@ public class TaskIntegrationTest {
                 new WorkerComponent()
         );
 
-        URI taskUri = URI.create("http://localhost:" + clientComponent.config.restPort + "/task");
+        URI taskUri = URI.create("http://localhost:" + clientComponent.getConfig().restPort + "/task");
         HttpResponse<String> response = HttpClient.newBuilder().build().send(
                 HttpRequest.newBuilder()
                         .method("POST", HttpRequest.BodyPublishers.ofString("{ \"data\":\"my-data\"}"))
