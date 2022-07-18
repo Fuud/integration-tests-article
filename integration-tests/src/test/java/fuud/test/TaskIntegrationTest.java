@@ -1,13 +1,9 @@
 package fuud.test;
 
-import fuud.client.service.ClientServiceApplication;
-import fuud.test.infra.ClassPathHelper;
-import fuud.test.infra.Node;
-import fuud.worker.service.WorkerServiceApplication;
+import fuud.test.infra.components.ClientComponent;
+import fuud.test.infra.components.WorkerComponent;
 import org.gridkit.nanocloud.Cloud;
 import org.gridkit.nanocloud.CloudFactory;
-import org.gridkit.nanocloud.VX;
-import org.gridkit.vicluster.ViProps;
 import org.junit.Test;
 import org.springframework.http.HttpHeaders;
 
@@ -17,6 +13,7 @@ import java.net.http.HttpRequest;
 import java.net.http.HttpResponse;
 import java.util.Base64;
 
+import static fuud.test.infra.EnvStarter.env;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
 
@@ -25,27 +22,20 @@ public class TaskIntegrationTest {
     public void testTaskSubmission() throws Exception {
 
         Cloud cloud = CloudFactory.createCloud();
-        Node clientNode = new Node(cloud, "client");
-        clientNode.x(VX.CLASSPATH).inheritClasspath(false);
-        ViProps.at(clientNode).setLocalType();
-        ClassPathHelper.getClasspathForArtifact("client-service")
-                .forEach(classPathElement -> clientNode.x(VX.CLASSPATH).add(classPathElement));
-        clientNode.exec(() -> ClientServiceApplication.main(new String[0]));
+        ClientComponent clientComponent = new ClientComponent();
+        env(
+                cloud,
+                clientComponent,
+                new WorkerComponent()
+        );
 
-        Node workerNode = new Node(cloud, "worker");
-        workerNode.x(VX.CLASSPATH).inheritClasspath(false);
-        ViProps.at(workerNode).setLocalType();
-        ClassPathHelper.getClasspathForArtifact("worker-service")
-                .forEach(classPathElement -> workerNode.x(VX.CLASSPATH).add(classPathElement));
-        workerNode.exec(() -> WorkerServiceApplication.main(new String[0]));
-
-
+        URI taskUri = URI.create("http://localhost:" + clientComponent.config.restPort + "/task");
         HttpResponse<String> response = HttpClient.newBuilder().build().send(
                 HttpRequest.newBuilder()
                         .method("POST", HttpRequest.BodyPublishers.ofString("{ \"data\":\"my-data\"}"))
                         .header("Content-Type", "application/json")
                         .header(HttpHeaders.AUTHORIZATION, "Basic " + Base64.getEncoder().encodeToString("user:password".getBytes()))
-                        .uri(URI.create("http://localhost:8080/task"))
+                        .uri(taskUri)
                         .build(),
                 HttpResponse.BodyHandlers.ofString()
         );

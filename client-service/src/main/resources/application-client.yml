@@ -1,2 +1,2 @@
 client-service:
-  worker-url: "http://localhost:8090/task"
+  worker-url: "http://localhost:8090"

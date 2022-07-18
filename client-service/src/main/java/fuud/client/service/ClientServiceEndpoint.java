@@ -18,7 +18,7 @@ public class ClientServiceEndpoint {
 
     @PostMapping("/task")
     public String placeTask(@RequestBody ClientRequest request) {
-        return restTemplate.postForObject(config.getWorkerUrl(), request, WorkerResponseDto.class).getJobId();
+        return restTemplate.postForObject(config.getWorkerUrl() + "/task", request, WorkerResponseDto.class).getJobId();
     }
 
     @ExceptionHandler
