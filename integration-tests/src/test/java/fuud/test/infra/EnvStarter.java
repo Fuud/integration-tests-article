@@ -8,6 +8,8 @@ import com.fasterxml.jackson.databind.ObjectWriter;
 import fuud.test.infra.components.Component;
 import org.gridkit.nanocloud.Cloud;
 import org.gridkit.nanocloud.CloudFactory;
+import org.gridkit.nanocloud.VX;
+import org.gridkit.vicluster.ViNode;
 
 import java.util.Arrays;
 import java.util.HashMap;
@@ -21,6 +23,7 @@ public class EnvStarter {
 
     public static void integrationTest(TestBlock block) {
         Cloud cloud = CloudFactory.createCloud();
+        applyCommonJvmArgs(cloud);
         try {
             block.performTest(cloud);
         } catch (Exception e) {
@@ -28,6 +31,12 @@ public class EnvStarter {
         } finally {
             cloud.shutdown();
         }
+    }
+
+    private static void applyCommonJvmArgs(Cloud cloud) {
+        ViNode allNodes = cloud.node("**");
+        allNodes.x(VX.JVM).addJvmArg("-XX:TieredStopAtLevel=1");
+        allNodes.x(VX.JVM).addJvmArg("-Xverify:none");
     }
 
     public static void env(Cloud cloud, Component<?>... components) {
