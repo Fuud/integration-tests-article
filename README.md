@@ -16,4 +16,6 @@
    links [rev:a020e1f9](https://github.com/Fuud/integration-tests-article/commit/a020e1f92ea9e6fdce97671a598b3ecd32ffa93b)
 9) Shutdown jvms after
    test [rev:7b4e07f9](https://github.com/Fuud/integration-tests-article/commit/7b4e07f9f78a290adc1ffc64cfd4c953780e20c3)
-10) Speedup test: enable parallelization + jvm options
+10) Speedup test: enable parallelization + jvm
+    options [rev:3cfefd2c](https://github.com/Fuud/integration-tests-article/commit/3cfefd2cebc9c9a75d93c15fcfe5d0671756340c)
+11) Enable debug for component jvms

@@ -11,21 +11,38 @@ import org.gridkit.nanocloud.CloudFactory;
 import org.gridkit.nanocloud.VX;
 import org.gridkit.vicluster.ViNode;
 
+import java.lang.management.ManagementFactory;
+import java.lang.management.ThreadInfo;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Map;
 
 public class EnvStarter {
+    public static final boolean isDebugEnabled = detectIsDebugEnabled();
+
+    @FunctionalInterface
+    public interface NodeProvider {
+        Node getNode(String name, Component.BaseComponentConfig config);
+    }
+
+
     @FunctionalInterface
     public interface TestBlock {
-        void performTest(Cloud cloud) throws Exception;
+        void performTest(NodeProvider nodeProvider) throws Exception;
     }
 
     public static void integrationTest(TestBlock block) {
         Cloud cloud = CloudFactory.createCloud();
         applyCommonJvmArgs(cloud);
+        NodeProvider nodeProvider = (name, config) -> {
+            Node node = new Node(cloud, name);
+            if (isDebugEnabled) {
+                node.x(VX.JVM).addJvmArgs("-agentlib:jdwp=transport=dt_socket,server=y,suspend=n,address=*:" + config.debugPort);
+            }
+            return node;
+        };
         try {
-            block.performTest(cloud);
+            block.performTest(nodeProvider);
         } catch (Exception e) {
             throw new RuntimeException(e);
         } finally {
@@ -39,7 +56,7 @@ public class EnvStarter {
         allNodes.x(VX.JVM).addJvmArg("-Xverify:none");
     }
 
-    public static void env(Cloud cloud, Component<?>... components) {
+    public static void env(NodeProvider cloud, Component<?>... components) {
         printConfigsToConsole(components);
 
         for (Component<?> component : components) {
@@ -62,5 +79,17 @@ public class EnvStarter {
         } catch (JsonProcessingException e) {
             throw new RuntimeException(e);
         }
+    }
+
+    // copied from https://stackoverflow.com/a/71375505
+    private static boolean detectIsDebugEnabled() {
+        ThreadInfo[] infos = ManagementFactory.getThreadMXBean()
+                .dumpAllThreads(false, false, 0);
+        for (ThreadInfo info : infos) {
+            if ("JDWP Command Reader".equals(info.getThreadName())) {
+                return true;
+            }
+        }
+        return false;
     }
 }

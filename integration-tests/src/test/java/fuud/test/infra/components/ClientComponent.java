@@ -2,9 +2,9 @@ package fuud.test.infra.components;
 
 import fuud.client.service.ClientServiceApplication;
 import fuud.test.infra.ClassPathHelper;
+import fuud.test.infra.EnvStarter;
 import fuud.test.infra.Node;
 import fuud.test.infra.PortAllocator;
-import org.gridkit.nanocloud.Cloud;
 import org.gridkit.nanocloud.VX;
 import org.gridkit.vicluster.ViProps;
 
@@ -12,7 +12,7 @@ import java.util.List;
 
 public class ClientComponent extends Component<ClientComponent.Config> {
     @SuppressWarnings("unused")
-    public static class Config {
+    public static class Config extends BaseComponentConfig {
         public final int restPort = PortAllocator.freePort();
         private final String link = "http://localhost:" + restPort;
     }
@@ -22,8 +22,8 @@ public class ClientComponent extends Component<ClientComponent.Config> {
     }
 
     @Override
-    public void start(Cloud cloud, List<Component<?>> env) {
-        Node clientNode = new Node(cloud, "client");
+    public void start(EnvStarter.NodeProvider cloud, List<Component<?>> env) {
+        Node clientNode = cloud.getNode("client", config);
         clientNode.x(VX.CLASSPATH).inheritClasspath(false);
         ViProps.at(clientNode).setLocalType();
         ClassPathHelper.getClasspathForArtifact("client-service")
