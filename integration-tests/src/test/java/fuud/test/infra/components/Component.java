@@ -31,7 +31,12 @@ public abstract class Component<TConfig extends Component.BaseComponentConfig> {
 
     @SuppressWarnings("unused")
     public static class BaseComponentConfig {
-        public final int debugPort = PortAllocator.freePort();
-        public final String debugLink = "Listening for transport dt_socket at address: " + debugPort + " ";
+        public final int debugPort;
+        public final String debugLink;
+
+        public BaseComponentConfig(PortAllocator portAllocator) {
+            debugPort = portAllocator.freePort();
+            debugLink = "Listening for transport dt_socket at address: " + debugPort + " ";
+        }
     }
 }

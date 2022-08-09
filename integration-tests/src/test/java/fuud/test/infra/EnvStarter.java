@@ -5,6 +5,7 @@ import com.fasterxml.jackson.annotation.PropertyAccessor;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.ObjectWriter;
+import fuud.test.infra.CloudConfigurator.ExecutionContext;
 import fuud.test.infra.components.Component;
 import org.gridkit.nanocloud.Cloud;
 import org.gridkit.nanocloud.CloudFactory;
@@ -28,11 +29,12 @@ public class EnvStarter {
 
     @FunctionalInterface
     public interface TestBlock {
-        void performTest(NodeProvider nodeProvider) throws Exception;
+        void performTest(NodeProvider nodeProvider, String hostname, PortAllocator portAllocator) throws Exception;
     }
 
     public static void integrationTest(TestBlock block) {
         Cloud cloud = CloudFactory.createCloud();
+        ExecutionContext executionContext = CloudConfigurator.configureCloud(cloud);
         applyCommonJvmArgs(cloud);
         NodeProvider nodeProvider = (name, config) -> {
             Node node = new Node(cloud, name);
@@ -42,7 +44,7 @@ public class EnvStarter {
             return node;
         };
         try {
-            block.performTest(nodeProvider);
+            block.performTest(nodeProvider, executionContext.hostName(), executionContext.portAllocator());
         } catch (Exception e) {
             throw new RuntimeException(e);
         } finally {

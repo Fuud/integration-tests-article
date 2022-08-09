@@ -18,4 +18,6 @@
    test [rev:7b4e07f9](https://github.com/Fuud/integration-tests-article/commit/7b4e07f9f78a290adc1ffc64cfd4c953780e20c3)
 10) Speedup test: enable parallelization + jvm
     options [rev:3cfefd2c](https://github.com/Fuud/integration-tests-article/commit/3cfefd2cebc9c9a75d93c15fcfe5d0671756340c)
-11) Enable debug for component jvms
+11) Enable debug for component
+    jvms [rev:2b327516](https://github.com/Fuud/integration-tests-article/commit/2b3275160afa6da7928ff6bc8efaa2b458fc600c)
+12) Execution on remote box

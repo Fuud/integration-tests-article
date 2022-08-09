@@ -19,11 +19,14 @@ import static org.junit.Assert.assertFalse;
 public class TaskIntegrationTest {
     @Test
     public void testTaskSubmission() {
-        integrationTest((cloud) -> {
-            ClientComponent clientComponent = new ClientComponent();
-            env(cloud, clientComponent, new WorkerComponent());
+        integrationTest((cloud, hostname, portAllocator) -> {
+            ClientComponent clientComponent = new ClientComponent(portAllocator);
+            env(cloud,
+                    clientComponent,
+                    new WorkerComponent(portAllocator)
+            );
 
-            URI taskUri = URI.create("http://localhost:" + clientComponent.getConfig().restPort + "/task");
+            URI taskUri = URI.create("http://" + hostname + ":" + clientComponent.getConfig().restPort + "/task");
             HttpResponse<String> response = HttpClient.newBuilder().build().send(
                     HttpRequest.newBuilder()
                             .method("POST", HttpRequest.BodyPublishers.ofString("{ \"data\":\"my-data\"}"))
